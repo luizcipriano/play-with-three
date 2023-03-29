@@ -19,7 +19,7 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
-scene.background = new THREE.Color( 0xffffff ); // white
+scene.background = new THREE.Color( '#000' ); // white
 /**
  * Textures
  */
@@ -41,14 +41,14 @@ fontLoader.load(
 
         // create a material with an initial texture
         var textureLoader = new THREE.TextureLoader();
-        let matcapTexture = textureLoader.load('textures/matcaps/7.png')
+        let matcapTexture = textureLoader.load('textures/matcaps/8.png')
         var material = new THREE.MeshBasicMaterial({ map: matcapTexture });
 
         // create a dat.GUI instance
         var gui = new dat.GUI();
 
         // add a texture controller to the GUI
-        var textureController = gui.add(material, 'map', {
+        var textureController = gui.add(material, 'texture', {
             'Texture 1': textureLoader.load('textures/matcaps/1.png'),
             'Texture 2': textureLoader.load('textures/matcaps/2.png'),
             'Texture 3': textureLoader.load('textures/matcaps/3.png'),
@@ -86,7 +86,7 @@ fontLoader.load(
      
         // Text
         const textGeometry = new TextGeometry(
-            'WeeFront !!',
+            'WeeFront',
             {
                 font: font,
                 size: 0.5,
@@ -112,7 +112,7 @@ fontLoader.load(
           });
      
         // Donuts
-        const donutGeometry =   new THREE.TorusKnotGeometry( .9 , .02 , 50, 16, 2, 3 )
+        const donutGeometry =  new THREE.TorusGeometry( .5, .2, 16, 100 );
 
         for(let i = 0; i < 100; i++)
         {
@@ -127,7 +127,24 @@ fontLoader.load(
             gsap.to(donut.rotation, {duration:100, y:  Math.PI * 2, repeat: -1, ease: "none"});
             scene.add(donut)
         }
-        
+        let button = {
+            more: function() {
+              for(let i = 0; i < 100; i++) {
+                const donut = new THREE.Mesh(donutGeometry, material)
+                donut.position.x = (Math.random() - 0.5) * 10
+                donut.position.y = (Math.random() - 0.5) * 10
+                donut.position.z = (Math.random() - 0.5) * 10
+                donut.rotation.x = Math.random() * Math.PI
+                donut.rotation.y = Math.random() * Math.PI
+                const scale = Math.random()
+                donut.scale.set(scale, scale, scale)
+                gsap.to(donut.rotation, {duration:100, y:  Math.PI * 2, repeat: -1, ease: "none"});
+                scene.add(donut)
+    
+              }
+            }
+          };
+          gui.add(button, 'more');
     }
     
 )
